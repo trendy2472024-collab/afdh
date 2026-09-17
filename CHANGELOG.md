@@ -5,6 +5,7 @@
 Foundation.
 
 - Kernel: quarantine, factory restraint, bind pin, evidence ladder, F/S/E evals that can fail
+- E1/E3 are real predicates (plan ledger, bind-clears-SAST / human still required)
 - CLI: `catalog` `scan` `eval` `plan` `prove` `export` `factory`
 - 13 portable skills + hostile fixture `speed-ship`
 - Stub scanner adapters behind capabilities

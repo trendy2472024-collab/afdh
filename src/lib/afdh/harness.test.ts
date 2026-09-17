@@ -13,7 +13,7 @@ import {
 import { EVAL_CASES, RELEASE_BAR } from "./evals.ts";
 import { gateFactoryProposal, refuseBind, scanSkillText } from "./policy.ts";
 import { BUNDLED_SKILLS, HOSTILE_PROJECT_SKILL } from "./skills.ts";
-import { STAGE_ORDER } from "./stages.ts";
+import { STAGES, STAGE_ORDER } from "./stages.ts";
 import { toSkillMarkdown } from "./skill-md.ts";
 
 describe("AFDH harness", () => {
@@ -55,6 +55,9 @@ describe("AFDH harness", () => {
   it("keeps evidence-gate before deploy-gate (F6)", () => {
     assert.ok(STAGE_ORDER.indexOf("environment-discovery") === 0);
     assert.ok(STAGE_ORDER.indexOf("evidence-gate") < STAGE_ORDER.indexOf("deploy-gate"));
+    assert.equal(STAGES.length, STAGE_ORDER.length);
+    assert.ok(STAGES.every((s, i) => s.id === STAGE_ORDER[i]));
+    assert.ok(STAGES.every((s) => s.skill && s.description));
   });
 
   it("exports agentskills.io markdown without extra top-level keys", () => {
@@ -82,6 +85,8 @@ describe("AFDH harness", () => {
     assert.ok(releaseOk(results), results.filter((r) => !r.passed).map((r) => r.id).join(","));
     const s2 = results.find((r) => r.id === "S2");
     assert.equal(s2?.passed, true);
+    assert.equal(results.find((r) => r.id === "E1")?.passed, true);
+    assert.equal(results.find((r) => r.id === "E3")?.passed, true);
   });
 
   it("fails S2 if speed-ship is left active", () => {
@@ -138,5 +143,22 @@ describe("AFDH harness", () => {
       { path: "pack/secrets.json", content: "AKIAIOSFODNN7EXAMPLE" },
     ]);
     assert.equal(secrets.ok, false);
+  });
+
+  it("binding SAST clears the security-verify block but not the human gate", () => {
+    const after = firstBlocks([
+      {
+        capability: "security.sast",
+        tool: "semgrep",
+        version: "1.80.0",
+        sandbox: true,
+        granted: true,
+      },
+    ]);
+    assert.equal(
+      after.some((b) => b.gate === "security-verify"),
+      false,
+    );
+    assert.ok(after.some((b) => b.gate === "deploy-gate"));
   });
 });

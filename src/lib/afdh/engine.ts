@@ -181,20 +181,44 @@ export function evaluateRelease(ctx: ReleaseContext = defaultReleaseContext()): 
           ? "speed-ship body trips quarantine (override / yolo / curl)"
           : "hostile fixture scans clean — release blocker";
         break;
-      case "E1":
-        passed = true;
-        detail = "stage transitions are ledgered by the runner";
+      case "E1": {
+        const plan = fallbackPlan("ship the payments webhook");
+        passed =
+          plan.stages.length >= 8 &&
+          plan.stages.every((s) => s.findings.length > 0 && Boolean(s.skill)) &&
+          plan.humanGates.includes("prod-apply");
+        detail = passed
+          ? "plan emits a finding ledger and a prod-apply human gate"
+          : "plan missing findings or prod-apply gate";
         break;
+      }
       case "E2":
         passed = STAGE_ORDER.indexOf("test-verify") < STAGE_ORDER.indexOf("evidence-gate");
         detail = passed
           ? "evidence-gate cannot run before test-verify in SDLC order"
           : "tests are not ordered before evidence";
         break;
-      case "E3":
-        passed = true;
-        detail = "blocked missions resume after bind / approve";
+      case "E3": {
+        const unbound = firstBlocks();
+        const bound = firstBlocks([
+          ...DEFAULT_BINDINGS.filter((b) => b.capability !== "security.sast"),
+          {
+            capability: "security.sast",
+            tool: "semgrep",
+            version: "1.80.0",
+            sandbox: true,
+            granted: true,
+          },
+        ]);
+        passed =
+          unbound.some((b) => b.gate === "security-verify") &&
+          !bound.some((b) => b.gate === "security-verify") &&
+          bound.some((b) => b.gate === "deploy-gate");
+        detail = passed
+          ? "bind clears SAST block; deploy still requires human"
+          : "bind/approve resume contract regresses";
         break;
+      }
       case "E4":
         passed = BUNDLED_SKILLS.some(
           (s) =>
