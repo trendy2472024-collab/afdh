@@ -1,0 +1,21 @@
+name: ci
+on:
+  push:
+    branches: [main]
+  pull_request:
+jobs:
+  harness:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - run: node --experimental-strip-types --test src/lib/afdh/harness.test.ts
+      - run: node cli/afdh.mjs scan
+      - run: node cli/afdh.mjs eval
+      - name: factory refuses one-offs
+        run: |
+          if node cli/afdh.mjs factory once-fix "this repo only"; then
+            echo "factory should have refused"; exit 1
+          fi
