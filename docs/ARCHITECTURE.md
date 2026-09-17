@@ -26,7 +26,8 @@ Kernel modules (`src/lib/afdh/`):
 
 | File | Owns |
 |---|---|
-| `engine.ts` | grant/ladder/evals/`prove`/`canApplyProd` |
+| `engine.ts` | grant, ladder, evals, `prove`, `canApplyProd` |
+| `identity.ts` | SPIFFE/WIMSE URI, WIT+WPT gate, fail-closed catalog |
 | `policy.ts` | identities, radius, quarantine, factory, bind pin |
 | `adapters.ts` | `ScannerAdapter` contract + stubs |
 | `planner.ts` | fail-closed local plan (intent ≠ grant) |
@@ -41,6 +42,8 @@ The TUI (`src/components/tui`) and CLI (`cli/afdh.mjs`) are two faces of this ke
 user · orchestrator · specialist · reviewer · factory · workload
 
 User intent is **not** a grant. Workload identity applies prod, not the chat user.
+
+See [IDENTITY.md](IDENTITY.md). SPIFFE IDs are assigned; JWT-SVID is bearer and cannot prod-apply; WIT requires WPT or HTTP Message Signatures. The LLM MUST NOT hold the credential (WIMSE AIMS-00, 2026-09-15). Node-root is identity compromise (Spooffe, 2026-09-10). Live SPIRE is not in 0.1.
 
 ## Blast radius
 
@@ -72,7 +75,10 @@ F6: deploy-gate cannot run before evidence-gate.
 | 007 | Reviewer ≠ builder | Same-turn self-review |
 | 008 | Human on prod / secrets / IAM / skill mutate | Unattended prod apply |
 | 009 | Fail closed | Best-effort pass |
-| 010 | Per-agent allowlists | Every agent sees every skill |
+| 011 | Workload identity is a SPIFFE/WIMSE credential | Boolean flag / chat-user-as-workload |
+| 012 | Fail closed on identity outage | Fail-open when SPIRE/OIDC is down |
+| 013 | WIT is not a bearer; PoP is WPT or HTTP signatures | JWT-SVID / WIT as `Authorization: Bearer` |
+| 014 | Node-root is identity compromise (Spooffe) | Trust every SVID from a shared node |
 
 ## Honest scope (v0.1)
 

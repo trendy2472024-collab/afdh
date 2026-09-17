@@ -64,6 +64,7 @@ export const QUARANTINE_PATTERNS: { id: string; re: RegExp; reason: string }[] =
 ];
 
 export function scanSkillText(text: string): { id: string; reason: string }[] {
+  // Documenting an attack is not executing it. Strip teaching examples.
   const documented = text
     .replace(/do\s+not\s+[^\n]*/gi, "")
     .replace(/["'`][^"'`]{0,120}["'`]/g, "");
@@ -117,4 +118,8 @@ export const ADRS = [
   { id: "008", decision: "Human gates on prod/secrets/IAM/skill mutate", rejected: "Unattended prod apply" },
   { id: "009", decision: "Fail closed", rejected: "Best-effort pass" },
   { id: "010", decision: "Per-agent allowlists", rejected: "Every agent sees every skill" },
+  { id: "011", decision: "Workload identity is a SPIFFE/WIMSE credential", rejected: "Boolean flag / chat-user-as-workload / static keys" },
+  { id: "012", decision: "Fail closed on identity outage", rejected: "Fail-open when SPIRE/OIDC is unreachable" },
+  { id: "013", decision: "WIT is not a bearer; PoP is WPT or HTTP signatures", rejected: "JWT-SVID / WIT as Authorization: Bearer" },
+  { id: "014", decision: "Node-root is identity compromise (Spooffe)", rejected: "Trust every SVID from a shared node" },
 ] as const;

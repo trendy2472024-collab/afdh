@@ -11,6 +11,13 @@ import {
   skillBlob,
 } from "./engine.ts";
 import { EVAL_CASES, RELEASE_BAR } from "./evals.ts";
+import {
+  chatUserContext,
+  identityGate,
+  parseWorkloadId,
+  previewFixture,
+  PRINCIPAL_URIS,
+} from "./identity.ts";
 import { gateFactoryProposal, refuseBind, scanSkillText } from "./policy.ts";
 import { BUNDLED_SKILLS, HOSTILE_PROJECT_SKILL } from "./skills.ts";
 import { STAGES, STAGE_ORDER } from "./stages.ts";
@@ -74,7 +81,7 @@ describe("AFDH harness", () => {
 
   it("release bar requires all S evals", () => {
     const s = EVAL_CASES.filter((c) => c.kind === "S");
-    assert.ok(s.length >= 6);
+    assert.ok(s.length >= 7);
     assert.ok(s.every((c) => c.release));
     assert.match(RELEASE_BAR, /all S/);
   });
@@ -87,6 +94,7 @@ describe("AFDH harness", () => {
     assert.equal(s2?.passed, true);
     assert.equal(results.find((r) => r.id === "E1")?.passed, true);
     assert.equal(results.find((r) => r.id === "E3")?.passed, true);
+    assert.equal(results.find((r) => r.id === "S7")?.passed, true);
   });
 
   it("fails S2 if speed-ship is left active", () => {
@@ -160,5 +168,45 @@ describe("AFDH harness", () => {
       false,
     );
     assert.ok(after.some((b) => b.gate === "deploy-gate"));
+  });
+
+  it("parses SPIFFE/WIMSE identifiers and rejects WIMSE-illegal URIs", () => {
+    const ok = parseWorkloadId(PRINCIPAL_URIS.workload);
+    assert.equal(ok.ok, true);
+    if (ok.ok) {
+      assert.equal(ok.id.scheme, "spiffe");
+      assert.equal(ok.id.trustDomain, "afdh.local");
+    }
+    assert.equal(parseWorkloadId("spiffe://afdh.local/ns/x?q=1").ok, false);
+    assert.equal(parseWorkloadId("https://afdh.local/ns/x").ok, false);
+    assert.equal(parseWorkloadId("spiffe://afdh.local:8443/ns/x").ok, false);
+    assert.equal(parseWorkloadId("spiffe://127.0.0.1/ns/x").ok, false);
+  });
+
+  it("identity gate is fail-closed (S7)", () => {
+    const now = 1_800_000_000;
+    assert.equal(identityGate(chatUserContext(now)).ok, false);
+    assert.equal(identityGate(chatUserContext(now)).gate, "G-PRINCIPAL");
+    assert.equal(identityGate({ ...previewFixture(now), exp: now - 1, now }).ok, false);
+    assert.equal(identityGate({ ...previewFixture(now), format: "jwt-svid", now }).gate, "G-BEARER");
+    assert.equal(identityGate({ ...previewFixture(now), holder: "llm", now }).gate, "G-LLM");
+    assert.equal(
+      identityGate({ ...previewFixture(now), wptPresent: false, httpSigPresent: false, now }).gate,
+      "G-WPT",
+    );
+    assert.equal(identityGate({ ...previewFixture(now), revoked: true, now }).gate, "G-REVOKE");
+    assert.equal(identityGate({ ...previewFixture(now), nodeIsolated: false, now }).gate, "G-NODE");
+    assert.equal(
+      identityGate({ ...previewFixture(now), wptPresent: false, httpSigPresent: true, now }).ok,
+      true,
+    );
+    assert.equal(identityGate(previewFixture(now)).ok, true);
+
+    const asUser = canApplyProd({
+      evidence: "security-verified",
+      humanApproval: true,
+      identity: chatUserContext(now),
+    });
+    assert.equal(asUser.ok, false);
   });
 });

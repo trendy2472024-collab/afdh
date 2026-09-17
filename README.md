@@ -33,7 +33,8 @@ Public repo: [github.com/trendy2472024-collab/afdh](https://github.com/trendy247
 | Factory refuse one-off / privilege | Signed catalog + break-glass |
 | Bind pin (`latest` and `curl \| sh` denied) | OTel export |
 | Evidence ladder + SDLC order (F6) | Multi-agent runtime embedding |
-| Secret heuristic (AKIA / ghp_ / PEM) | Workload identity federation |
+| Secret heuristic (AKIA / ghp_ / PEM) | Live SPIRE / IRSA / WIF / Entra |
+| SPIFFE/WIMSE identity *context* (WIT+WPT, fail-closed) | Crypto verify of a real SVID |
 | 13 portable skills + hostile fixture | |
 
 The TUI is a **reference control-plane UX** on this kernel. Scanner adapters implement `ScannerAdapter` in `src/lib/afdh/adapters.ts`. A stub ships so the contract is testable today. Real adapters are the highest-leverage PRs.
@@ -51,6 +52,7 @@ node cli/afdh.mjs prove     # fail-closed gates, no agent required
 node cli/afdh.mjs eval      # release bar: all S; F1–F3; E2
 node cli/afdh.mjs plan "ship the payments webhook"
 node cli/afdh.mjs factory once-fix "this repo only"   # must refuse
+node cli/afdh.mjs identity  # chat-user MUST deny prod-apply
 ```
 
 If `scan` does not quarantine `speed-ship`, that is a **release blocker**. Do not ship.
@@ -104,6 +106,7 @@ You cannot skip rungs. Deploy cannot run before the evidence gate (F6).
 ```
 cli/afdh.mjs              headless control plane
 src/lib/afdh/engine.ts    grant, ladder, evals, prove
+src/lib/afdh/identity.ts  SPIFFE/WIMSE identity gate
 src/lib/afdh/adapters.ts  ScannerAdapter contract
 src/lib/afdh/policy.ts    quarantine + factory + bind pin
 skills/                   portable SKILL.md tree
@@ -123,7 +126,6 @@ Read [CONTRIBUTING.md](CONTRIBUTING.md). Highest-leverage PRs:
 Do not send: one-off helpers, always-approve-deploy, extra YAML keys, README-as-policy.
 
 Good first issues are labelled `good first issue`.
-Open adapter work: [#1 Semgrep](https://github.com/trendy2472024-collab/afdh/issues/1) · [#2 gitleaks](https://github.com/trendy2472024-collab/afdh/issues/2) · [#4 Trivy](https://github.com/trendy2472024-collab/afdh/issues/4).
 
 ## License
 

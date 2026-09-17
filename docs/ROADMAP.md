@@ -13,8 +13,9 @@ In-process control plane. CI is the contract.
 - Secret heuristic (AKIA / ghp_ / PEM)
 - 13 portable skills + hostile fixture
 - Stub `ScannerAdapter` so the contract is testable
+- SPIFFE/WIMSE identity *context* (URI, WIT+WPT or HTTP-SIG, revocation, node isolation, fail-closed catalog). Fixture, not SPIRE.
 
-Not in 0.1: live Semgrep / gitleaks / Trivy processes, signed catalog, workload-identity federation, OTel export, npm publish.
+Not in 0.1: live Semgrep / gitleaks / Trivy processes, signed catalog, live SPIRE / IRSA / WIF / Entra federation, OTel export, npm publish.
 
 ## 0.2 — real scanners
 
@@ -36,7 +37,7 @@ Highest-leverage work. See [ADAPTERS.md](ADAPTERS.md) and issues labelled `adapt
 Release bar already written: **all S pass; F1–F3 and E2 pass.** 1.0 additionally requires:
 
 - Live adapters on the default bind map (F5 flips: SAST is bound, still fail-closed on findings)
-- Workload identity is a real principal, not a flag
+- Workload identity is a real principal (SPIRE or cloud federation), not a fixture
 - Human gate cannot be auto-clicked by the same process that built the diff
 
 Do not ship 1.0 because the TUI looks finished.

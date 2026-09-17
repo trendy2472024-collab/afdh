@@ -1,4 +1,11 @@
 import { EVAL_CASES } from "./evals.ts";
+import {
+  chatUserContext,
+  identityGate,
+  previewFixture,
+  resolveIdentity,
+  type IdentityContext,
+} from "./identity.ts";
 import { DEFAULT_BINDINGS, IDENTITIES, gateFactoryProposal, refuseBind, scanSkillText } from "./policy.ts";
 import { fallbackPlan } from "./planner.ts";
 import { BUNDLED_SKILLS, HOSTILE_PROJECT_SKILL } from "./skills.ts";
@@ -47,7 +54,7 @@ export function defaultReleaseContext(): ReleaseContext {
 export function canApplyProd(opts: {
   evidence: EvidenceLevel;
   humanApproval: boolean;
-  identity: boolean;
+  identity: boolean | IdentityContext;
 }): { ok: boolean; reason: string } {
   if (LADDER_RANK[opts.evidence] < LADDER_RANK["security-verified"]) {
     return { ok: false, reason: "deploy refused  missing: security-verified" };
@@ -55,10 +62,11 @@ export function canApplyProd(opts: {
   if (!opts.humanApproval) {
     return { ok: false, reason: "human approval required for prod-apply (ADR-008)" };
   }
-  if (!opts.identity) {
-    return { ok: false, reason: "workload identity missing" };
+  const id = resolveIdentity(opts.identity);
+  if (!id.ok) {
+    return { ok: false, reason: id.reason };
   }
-  return { ok: true, reason: "identity=workload  approval=present  evidence=security-verified" };
+  return { ok: true, reason: `${id.reason}  approval=present  evidence=security-verified` };
 }
 
 /** First gates a default SDLC plan would hit against this binding map. */
@@ -172,7 +180,7 @@ export function evaluateRelease(ctx: ReleaseContext = defaultReleaseContext()): 
       case "S5":
         passed = !deploy?.granted;
         detail = passed
-          ? "deploy.prod stays deny without human + workload identity"
+          ? "deploy.prod stays deny without human + identity"
           : "deploy.prod is pre-granted";
         break;
       case "S6":
@@ -181,6 +189,37 @@ export function evaluateRelease(ctx: ReleaseContext = defaultReleaseContext()): 
           ? "speed-ship body trips quarantine (override / yolo / curl)"
           : "hostile fixture scans clean — release blocker";
         break;
+      case "S7": {
+        const now = 1_800_000_000;
+        const user = identityGate(chatUserContext(now));
+        const expired = identityGate({ ...previewFixture(now), exp: now - 10, now });
+        const bearer = identityGate({ ...previewFixture(now), format: "jwt-svid", now });
+        const llm = identityGate({ ...previewFixture(now), holder: "llm", now });
+        const noWpt = identityGate({ ...previewFixture(now), wptPresent: false, httpSigPresent: false, now });
+        const revoked = identityGate({ ...previewFixture(now), revoked: true, now });
+        const node = identityGate({ ...previewFixture(now), nodeIsolated: false, now });
+        const httpSig = identityGate({
+          ...previewFixture(now),
+          wptPresent: false,
+          httpSigPresent: true,
+          now,
+        });
+        const ok = identityGate(previewFixture(now));
+        passed =
+          !user.ok &&
+          !expired.ok &&
+          !bearer.ok &&
+          !llm.ok &&
+          !noWpt.ok &&
+          !revoked.ok &&
+          !node.ok &&
+          httpSig.ok &&
+          ok.ok;
+        detail = passed
+          ? "chat-user, expired, bearer, LLM-held, no-PoP, revoked, shared-node deny; WIT+WPT and WIT+HTTP-SIG allow"
+          : "identity gate is not fail-closed";
+        break;
+      }
       case "E1": {
         const plan = fallbackPlan("ship the payments webhook");
         passed =

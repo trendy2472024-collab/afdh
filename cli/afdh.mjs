@@ -26,6 +26,15 @@ const { RELEASE_BAR } = await import("../src/lib/afdh/evals.ts");
 const { toSkillMarkdown } = await import("../src/lib/afdh/skill-md.ts");
 const { evaluateRelease, releaseOk, firstBlocks, planObjective, formatPlan, canApplyProd, VERSION, LICENSE, REPO, skillBlob } =
   await import("../src/lib/afdh/engine.ts");
+const {
+  chatUserContext,
+  FAIL_CLOSED_GATES,
+  formatIdentity,
+  identityGate,
+  previewFixture,
+  PRINCIPAL_URIS,
+  demoGateCases,
+} = await import("../src/lib/afdh/identity.ts");
 const { mkdir, writeFile } = await import("node:fs/promises");
 const { join } = await import("node:path");
 
@@ -50,6 +59,8 @@ Usage:
   afdh eval                 F/S/E suite (release bar: all S; F1–F3; E2)
   afdh plan [objective]     SDLC plan; intent is not a grant
   afdh prove                show fail-closed gates without running agents
+  afdh identity             SPIFFE/WIMSE principals + identity gate (fail closed)
+  afdh whoami               current principals; chat-user MUST deny prod-apply
   afdh export [dir]         write SKILL.md tree (agentskills.io)
   afdh factory <name> <why> gated skill proposal
   afdh version
@@ -119,10 +130,33 @@ Same kernel as the TUI. Fail closed. Intent is not a grant.
       }
       const skip = canApplyProd({ evidence: "passed", humanApproval: false, identity: true });
       log(skip.ok ? "error" : "ok", `skip-deploy  ${skip.reason}`);
+      const asUser = canApplyProd({
+        evidence: "security-verified",
+        humanApproval: true,
+        identity: chatUserContext(),
+      });
+      log(asUser.ok ? "error" : "ok", `chat-user  ${asUser.reason}`);
       const latest = refuseBind("semgrep", "latest");
       log(latest ? "ok" : "error", `pin  ${latest ?? "latest was accepted"}`);
       log(sFail.length ? "error" : "ok", `S-suite  ${results.filter((r) => r.kind === "S" && r.passed).length}/${results.filter((r) => r.kind === "S").length}`);
-      if (!releaseOk(results) || skip.ok || !latest) process.exitCode = 1;
+      if (!releaseOk(results) || skip.ok || asUser.ok || !latest) process.exitCode = 1;
+      return;
+    }
+    case "identity":
+    case "whoami": {
+      log("id", "trust-domain  afdh.local  (local fixture — not live SPIRE)");
+      log("id", formatIdentity(previewFixture()));
+      for (const [kind, uri] of Object.entries(PRINCIPAL_URIS)) {
+        log("id", `${kind.padEnd(14)} ${uri}`);
+      }
+      const now = Math.floor(Date.now() / 1000);
+      for (const { label, ctx } of demoGateCases(now)) {
+        const d = identityGate(ctx);
+        log(d.ok ? "ok" : "error", `${d.gate.padEnd(12)} ${label}  ${d.reason}`);
+      }
+      log("system", `${FAIL_CLOSED_GATES.length} fail-closed gates. Missing identity is a deny.`);
+      const user = identityGate(chatUserContext(now));
+      if (user.ok) process.exitCode = 1;
       return;
     }
     case "export": {

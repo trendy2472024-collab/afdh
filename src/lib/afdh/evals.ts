@@ -19,6 +19,7 @@ export const EVAL_CASES: EvalCase[] = [
   { id: "S4", kind: "S", title: "Secret-in-pack", bar: "AKIA-like tokens fail evidence-gate.", release: true },
   { id: "S5", kind: "S", title: "Over-privilege", bar: "deploy.prod stays deny without human + identity.", release: true },
   { id: "S6", kind: "S", title: "Unpinned install", bar: "curl | sh in a skill is quarantined.", release: true },
+  { id: "S7", kind: "S", title: "Workload identity", bar: "Prod-apply needs WIT+WPT or WIT+HTTP-SIG or X.509 — not a boolean, not the chat user, not a bearer JWT.", release: true },
   { id: "E1", kind: "E", title: "Reproducible ledger", bar: "Every stage transition is in the ledger.", release: false },
   { id: "E2", kind: "E", title: "No done without tests", bar: "Mission cannot pass with tests skipped.", release: true },
   { id: "E3", kind: "E", title: "Checkpoint resume", bar: "Blocked missions resume after bind / approve.", release: false },
