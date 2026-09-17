@@ -109,6 +109,7 @@ src/lib/afdh/policy.ts    quarantine + factory + bind pin
 skills/                   portable SKILL.md tree
 docs/ARCHITECTURE.md      ADRs, identities, radius
 docs/ADAPTERS.md          how to land a real scanner
+docs/ROADMAP.md           0.2 scanners → 1.0 production bar
 ```
 
 ## Contribute
@@ -122,6 +123,7 @@ Read [CONTRIBUTING.md](CONTRIBUTING.md). Highest-leverage PRs:
 Do not send: one-off helpers, always-approve-deploy, extra YAML keys, README-as-policy.
 
 Good first issues are labelled `good first issue`.
+Open adapter work: [#1 Semgrep](https://github.com/trendy2472024-collab/afdh/issues/1) · [#2 gitleaks](https://github.com/trendy2472024-collab/afdh/issues/2) · [#4 Trivy](https://github.com/trendy2472024-collab/afdh/issues/4).
 
 ## License
 
