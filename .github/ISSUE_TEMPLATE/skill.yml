@@ -1,0 +1,27 @@
+name: Portable skill
+description: Add a scan-clean SKILL.md for a repeated pattern
+title: "skill: "
+labels: ["skill", "good first issue"]
+body:
+  - type: markdown
+    attributes:
+      value: Factory refuses one-offs and privilege. If this is a one-off, do not open the issue.
+  - type: input
+    id: name
+    attributes:
+      label: Skill name (kebab-case)
+    validations:
+      required: true
+  - type: textarea
+    id: repeat
+    attributes:
+      label: Where has this pattern repeated?
+    validations:
+      required: true
+  - type: textarea
+    id: capabilities
+    attributes:
+      label: Capabilities requested (not vendor CLIs)
+      placeholder: "security.sast, tests.unit"
+    validations:
+      required: true

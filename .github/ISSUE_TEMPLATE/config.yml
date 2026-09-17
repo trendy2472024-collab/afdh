@@ -1,0 +1,5 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Security advisory
+    url: https://github.com/trendy2472024-collab/afdh/security/advisories/new
+    about: Working jailbreak against factory, catalog, or evidence gate

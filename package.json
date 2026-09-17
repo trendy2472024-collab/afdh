@@ -2,14 +2,28 @@
   "name": "afdh",
   "version": "0.1.0",
   "private": false,
-  "description": "Agentic Framework DevSecOps Harness — a control plane, not a bigger prompt.",
+  "description": "Zero-trust control plane for agentic SDLC. Intent is not a grant.",
   "license": "Apache-2.0",
   "type": "module",
   "bin": { "afdh": "cli/afdh.mjs" },
   "scripts": {
     "test": "node --experimental-strip-types --test src/lib/afdh/harness.test.ts",
-    "afdh": "node cli/afdh.mjs"
+    "afdh": "node cli/afdh.mjs",
+    "scan": "node cli/afdh.mjs scan",
+    "eval": "node cli/afdh.mjs eval",
+    "prove": "node cli/afdh.mjs prove"
   },
   "engines": { "node": ">=22" },
-  "repository": { "type": "git", "url": "https://github.com/trendy2472024-collab/afdh.git" }
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/trendy2472024-collab/afdh.git"
+  },
+  "keywords": [
+    "agents",
+    "devsecops",
+    "control-plane",
+    "zero-trust",
+    "fail-closed",
+    "skills"
+  ]
 }

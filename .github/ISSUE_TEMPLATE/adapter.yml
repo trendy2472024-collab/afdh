@@ -1,0 +1,34 @@
+name: Scanner adapter
+description: Land a pinned scanner behind a capability
+title: "adapter: "
+labels: ["adapter", "help wanted"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Skills request capabilities. You bind a pinned adapter. Read docs/ADAPTERS.md first.
+  - type: dropdown
+    id: capability
+    attributes:
+      label: Capability
+      options:
+        - security.sast
+        - security.secrets
+        - security.sca
+        - security.iac
+    validations:
+      required: true
+  - type: input
+    id: tool
+    attributes:
+      label: Tool and pinned version
+      placeholder: "semgrep 1.80.0"
+    validations:
+      required: true
+  - type: textarea
+    id: contract
+    attributes:
+      label: How it fail-closes
+      description: What happens when the binary is missing, unpinned, or returns crit findings?
+    validations:
+      required: true

@@ -1,0 +1,21 @@
+name: Fail-closed bug
+description: A gate that should have blocked, did not
+title: "gate: "
+labels: ["security"]
+body:
+  - type: markdown
+    attributes:
+      value: Working jailbreaks against factory / catalog / evidence go to SECURITY.md, not here.
+  - type: textarea
+    id: repro
+    attributes:
+      label: Repro
+      description: "Prefer: node cli/afdh.mjs scan|eval|prove|factory …"
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected deny / quarantine
+    validations:
+      required: true

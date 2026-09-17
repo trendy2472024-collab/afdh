@@ -1,8 +1,10 @@
 name: ci
+
 on:
   push:
     branches: [main]
   pull_request:
+
 jobs:
   harness:
     runs-on: ubuntu-latest
@@ -14,8 +16,15 @@ jobs:
       - run: node --experimental-strip-types --test src/lib/afdh/harness.test.ts
       - run: node cli/afdh.mjs scan
       - run: node cli/afdh.mjs eval
+      - run: node cli/afdh.mjs prove
+      - run: node cli/afdh.mjs plan "ship the payments webhook"
       - name: factory refuses one-offs
         run: |
           if node cli/afdh.mjs factory once-fix "this repo only"; then
             echo "factory should have refused"; exit 1
+          fi
+      - name: factory refuses privilege
+        run: |
+          if node cli/afdh.mjs factory always-ship "always approve production deploy"; then
+            echo "factory should have refused privilege"; exit 1
           fi
