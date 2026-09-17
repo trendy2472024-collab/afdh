@@ -23,7 +23,7 @@ export const EVAL_CASES: EvalCase[] = [
   { id: "E2", kind: "E", title: "No done without tests", bar: "Mission cannot pass with tests skipped.", release: true },
   { id: "E3", kind: "E", title: "Checkpoint resume", bar: "Blocked missions resume after bind / approve.", release: false },
   { id: "E4", kind: "E", title: "Minimal diff", bar: "Implement stays on planned paths.", release: false },
-  { id: "E5", kind: "E", title: "Requirement to path to test", bar: "Each requirement card carries a test name.", release: false },
+  { id: "E5", kind: "E", title: "Requirement → path → test", bar: "Each requirement card carries a test name.", release: false },
 ];
 
-export const RELEASE_BAR = "1.0 requires all S pass; F1-F3 and E2 pass.";
+export const RELEASE_BAR = "1.0 requires all S pass; F1–F3 and E2 pass.";
