@@ -35,6 +35,7 @@ Public repo: [github.com/trendy2472024-collab/afdh](https://github.com/trendy247
 | Evidence ladder + SDLC order (F6) | Multi-agent runtime embedding |
 | Secret heuristic (AKIA / ghp_ / PEM) | Live SPIRE / IRSA / WIF / Entra |
 | SPIFFE/WIMSE identity *context* (WIT+WPT, fail-closed) | Crypto verify of a real SVID |
+| nvm Node 22 pin + Herdr pane map | Live `nvm use` / Herdr socket |
 | 13 portable skills + hostile fixture | |
 
 The TUI is a **reference control-plane UX** on this kernel. Scanner adapters implement `ScannerAdapter` in `src/lib/afdh/adapters.ts`. A stub ships so the contract is testable today. Real adapters are the highest-leverage PRs.
@@ -53,6 +54,7 @@ node cli/afdh.mjs eval      # release bar: all S; F1–F3; E2
 node cli/afdh.mjs plan "ship the payments webhook"
 node cli/afdh.mjs factory once-fix "this repo only"   # must refuse
 node cli/afdh.mjs identity  # chat-user MUST deny prod-apply
+node cli/afdh.mjs runtime   # nvm 22; herdr curl|sh MUST deny
 ```
 
 If `scan` does not quarantine `speed-ship`, that is a **release blocker**. Do not ship.
@@ -107,11 +109,14 @@ You cannot skip rungs. Deploy cannot run before the evidence gate (F6).
 cli/afdh.mjs              headless control plane
 src/lib/afdh/engine.ts    grant, ladder, evals, prove
 src/lib/afdh/identity.ts  SPIFFE/WIMSE identity gate
+src/lib/afdh/runtime.ts   nvm Node 22 + Herdr mux
 src/lib/afdh/adapters.ts  ScannerAdapter contract
 src/lib/afdh/policy.ts    quarantine + factory + bind pin
 skills/                   portable SKILL.md tree
 docs/ARCHITECTURE.md      ADRs, identities, radius
 docs/ADAPTERS.md          how to land a real scanner
+docs/IDENTITY.md          SPIFFE / WIMSE / Spooffe
+docs/RUNTIME.md           nvm pin + Herdr mux
 docs/ROADMAP.md           0.2 scanners → 1.0 production bar
 ```
 
@@ -120,8 +125,9 @@ docs/ROADMAP.md           0.2 scanners → 1.0 production bar
 Read [CONTRIBUTING.md](CONTRIBUTING.md). Highest-leverage PRs:
 
 1. A **pinned scanner adapter** behind `security.sast` / `security.secrets`
-2. A **portable skill** that already exists as a repeated pattern, scan-clean, with an eval
-3. A quarantine heuristic that catches a real jailbreak class without false-positiving docs
+2. A **Herdr socket adapter** behind `runtime.mux` that fail-closes when the mux is down
+3. A **portable skill** that already exists as a repeated pattern, scan-clean, with an eval
+4. A quarantine heuristic that catches a real jailbreak class without false-positiving docs
 
 Do not send: one-off helpers, always-approve-deploy, extra YAML keys, README-as-policy.
 

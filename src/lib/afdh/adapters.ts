@@ -109,3 +109,35 @@ export const ADAPTER_REGISTRY: ScannerAdapter[] = [stubSastAdapter, stubSecretsA
 export function findAdapter(capability: AdapterCapability, name?: string): ScannerAdapter | undefined {
   return ADAPTER_REGISTRY.find((a) => a.capability === capability && (!name || a.name === name));
 }
+
+/**
+ * Runtime adapters sit behind `runtime.node` and `runtime.mux`.
+ * v0.1 is presence + pin, not a live nvm/herdr process.
+ */
+export interface RuntimeAdapter {
+  capability: "runtime.node" | "runtime.mux";
+  name: string;
+  version: string;
+  available(): boolean;
+}
+
+export const stubNodeAdapter: RuntimeAdapter = {
+  capability: "runtime.node",
+  name: "node",
+  version: "22",
+  available() {
+    return true;
+  },
+};
+
+export const stubHerdrAdapter: RuntimeAdapter = {
+  capability: "runtime.mux",
+  name: "herdr",
+  version: "0.9.1",
+  available() {
+    return false;
+  },
+};
+
+export const RUNTIME_ADAPTERS: RuntimeAdapter[] = [stubNodeAdapter, stubHerdrAdapter];
+

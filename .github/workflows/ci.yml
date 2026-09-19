@@ -12,11 +12,13 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: "22"
+          node-version-file: ".nvmrc"
       - run: node --experimental-strip-types --test src/lib/afdh/harness.test.ts
       - run: node cli/afdh.mjs scan
       - run: node cli/afdh.mjs eval
       - run: node cli/afdh.mjs prove
+      - run: node cli/afdh.mjs identity
+      - run: node cli/afdh.mjs runtime
       - run: node cli/afdh.mjs plan "ship the payments webhook"
       - name: factory refuses one-offs
         run: |

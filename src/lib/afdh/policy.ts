@@ -38,6 +38,8 @@ export const DEFAULT_BINDINGS: CapabilityBinding[] = [
   { capability: "deploy.rollback", tool: "afdh-deploy", version: "0.1.0", sandbox: false, granted: false },
   { capability: "subagent.delegate", tool: "afdh-delegate", version: "0.1.0", sandbox: true, granted: true },
   { capability: "process.exec", tool: "sandbox-exec", version: "1.0.0", sandbox: true, granted: true },
+  { capability: "runtime.node", tool: "node", version: "22", sandbox: true, granted: true },
+  { capability: "runtime.mux", tool: null, version: null, sandbox: false, granted: false },
 ];
 
 export const QUARANTINE_PATTERNS: { id: string; re: RegExp; reason: string }[] = [
@@ -103,6 +105,10 @@ export function refuseBind(tool: string, version?: string | null): string | unde
   const t = tool.trim();
   if (!t) return "empty tool name";
   if (/curl|\|\s*(ba)?sh/i.test(t)) return "unpinned / pipe-to-shell bind refused (S3/S6)";
+  if (/irm[^\n]*\|\s*iex/i.test(t)) return "unpinned / pipe-to-shell bind refused (S3/S6)";
+  if (/herdr\.dev\/install|nvm-sh\/nvm|install\.sh|install\.ps1/i.test(t)) {
+    return "unpinned runtime install refused — pin herdr/nvm via brew, mise, or gh release (S3)";
+  }
   if (version === "latest" || /@latest$/i.test(t)) return "unpinned bind refused — pin a version (S3)";
   return undefined;
 }
@@ -122,4 +128,5 @@ export const ADRS = [
   { id: "012", decision: "Fail closed on identity outage", rejected: "Fail-open when SPIRE/OIDC is unreachable" },
   { id: "013", decision: "WIT is not a bearer; PoP is WPT or HTTP signatures", rejected: "JWT-SVID / WIT as Authorization: Bearer" },
   { id: "014", decision: "Node-root is identity compromise (Spooffe)", rejected: "Trust every SVID from a shared node" },
+  { id: "015", decision: "nvm pin + Herdr mux are capabilities", rejected: "curl | sh herdr.dev/install.sh / nvm install.sh" },
 ] as const;

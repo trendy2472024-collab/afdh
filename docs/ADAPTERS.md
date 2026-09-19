@@ -38,9 +38,14 @@ Do **not** put the CLI name in `SKILL.md` capabilities. The skill still says `se
 `refuseBind(tool, version)` rejects:
 
 - `latest`
-- `curl | sh` / `curl | bash`
+- `curl | sh` / `curl | bash` / `irm | iex`
+- `herdr.dev/install.sh`, `nvm-sh/nvm`, `install.sh` / `install.ps1`
 
 This lives in `policy.ts`. Adapters do not get a bypass.
+
+## Runtime adapters
+
+`runtime.node` (Node 22 / nvm) and `runtime.mux` (Herdr) use `RuntimeAdapter` in the same file. v0.1 stubs: node is available, herdr is not. See [RUNTIME.md](RUNTIME.md).
 
 ## Out of scope for 0.1
 

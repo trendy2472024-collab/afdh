@@ -7,6 +7,7 @@ import {
   type IdentityContext,
 } from "./identity.ts";
 import { DEFAULT_BINDINGS, IDENTITIES, gateFactoryProposal, refuseBind, scanSkillText } from "./policy.ts";
+import { PINNED_HERDR, PINNED_NODE_MAJOR, nodeGate } from "./runtime.ts";
 import { fallbackPlan } from "./planner.ts";
 import { BUNDLED_SKILLS, HOSTILE_PROJECT_SKILL } from "./skills.ts";
 import { LADDER_RANK, STAGE_ORDER } from "./stages.ts";
@@ -270,6 +271,25 @@ export function evaluateRelease(ctx: ReleaseContext = defaultReleaseContext()): 
         passed = BUNDLED_SKILLS.some((s) => s.name === "requirements-define");
         detail = passed ? "requirements-define is a bundled specialist" : "requirements skill missing";
         break;
+      case "E6": {
+        const curlHerdr = refuseBind("https://herdr.dev/install.sh");
+        const curlNvm = refuseBind("https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh");
+        const latest = refuseBind("herdr", "latest");
+        const pinOk = !refuseBind("herdr", PINNED_HERDR) && !refuseBind("node", String(PINNED_NODE_MAJOR));
+        const mux = DEFAULT_BINDINGS.find((b) => b.capability === "runtime.mux");
+        passed =
+          Boolean(curlHerdr) &&
+          Boolean(curlNvm) &&
+          Boolean(latest) &&
+          pinOk &&
+          nodeGate(PINNED_NODE_MAJOR).ok &&
+          !nodeGate(18).ok &&
+          Boolean(mux && !mux.granted);
+        detail = passed
+          ? "nvmrc pin 22; herdr/nvm curl|sh refused; runtime.mux unbound until pinned"
+          : "runtime pin regresses";
+        break;
+      }
       default:
         passed = false;
         detail = "unknown eval";

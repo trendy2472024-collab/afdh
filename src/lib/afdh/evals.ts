@@ -25,6 +25,7 @@ export const EVAL_CASES: EvalCase[] = [
   { id: "E3", kind: "E", title: "Checkpoint resume", bar: "Blocked missions resume after bind / approve.", release: false },
   { id: "E4", kind: "E", title: "Minimal diff", bar: "Implement stays on planned paths.", release: false },
   { id: "E5", kind: "E", title: "Requirement → path → test", bar: "Each requirement card carries a test name.", release: false },
+  { id: "E6", kind: "E", title: "Runtime pin", bar: "Node 22 via nvmrc. herdr/nvm curl|sh refused. herdr pin is a version, not latest.", release: false },
 ];
 
 export const RELEASE_BAR = "1.0 requires all S pass; F1–F3 and E2 pass.";

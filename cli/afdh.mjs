@@ -35,6 +35,15 @@ const {
   PRINCIPAL_URIS,
   demoGateCases,
 } = await import("../src/lib/afdh/identity.ts");
+const {
+  PINNED_HERDR,
+  RUNTIME_GATES,
+  formatPanes,
+  formatRuntime,
+  herdrEnvGate,
+  missionToPanes,
+  nodeGate,
+} = await import("../src/lib/afdh/runtime.ts");
 const { mkdir, writeFile } = await import("node:fs/promises");
 const { join } = await import("node:path");
 
@@ -61,6 +70,9 @@ Usage:
   afdh prove                show fail-closed gates without running agents
   afdh identity             SPIFFE/WIMSE principals + identity gate (fail closed)
   afdh whoami               current principals; chat-user MUST deny prod-apply
+  afdh runtime              nvm Node 22 pin + Herdr mux (fail closed on curl|sh)
+  afdh nvm                  show Node pin; Node < 22 is deny
+  afdh herdr                Herdr panes (fixture — not a live socket)
   afdh export [dir]         write SKILL.md tree (agentskills.io)
   afdh factory <name> <why> gated skill proposal
   afdh version
@@ -138,8 +150,10 @@ Same kernel as the TUI. Fail closed. Intent is not a grant.
       log(asUser.ok ? "error" : "ok", `chat-user  ${asUser.reason}`);
       const latest = refuseBind("semgrep", "latest");
       log(latest ? "ok" : "error", `pin  ${latest ?? "latest was accepted"}`);
+      const herdrCurl = refuseBind("https://herdr.dev/install.sh");
+      log(herdrCurl ? "ok" : "error", `herdr-curl  ${herdrCurl ?? "herdr install.sh was accepted"}`);
       log(sFail.length ? "error" : "ok", `S-suite  ${results.filter((r) => r.kind === "S" && r.passed).length}/${results.filter((r) => r.kind === "S").length}`);
-      if (!releaseOk(results) || skip.ok || asUser.ok || !latest) process.exitCode = 1;
+      if (!releaseOk(results) || skip.ok || asUser.ok || !latest || !herdrCurl) process.exitCode = 1;
       return;
     }
     case "identity":
@@ -157,6 +171,26 @@ Same kernel as the TUI. Fail closed. Intent is not a grant.
       log("system", `${FAIL_CLOSED_GATES.length} fail-closed gates. Missing identity is a deny.`);
       const user = identityGate(chatUserContext(now));
       if (user.ok) process.exitCode = 1;
+      return;
+    }
+    case "runtime":
+    case "nvm":
+    case "herdr":
+    case "panes": {
+      const node = nodeGate();
+      log(node.ok ? "ok" : "error", node.reason);
+      log("id", formatRuntime({ herdrBound: false, herdrEnv: false }));
+      const curl = refuseBind("https://herdr.dev/install.sh");
+      log(curl ? "ok" : "error", curl ?? "herdr.dev/install.sh was accepted");
+      const nvmCurl = refuseBind("https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh");
+      log(nvmCurl ? "ok" : "error", nvmCurl ?? "nvm install.sh was accepted");
+      log("ok", `pin  herdr@${PINNED_HERDR} via brew/mise/gh release — not curl|sh`);
+      const env = herdrEnvGate(process.env);
+      log(env.ok ? "ok" : "system", env.reason);
+      const panes = missionToPanes(null);
+      for (const line of formatPanes(panes).split("\n")) log("id", line);
+      log("system", `${RUNTIME_GATES.length} runtime gates. Missing mux is a fixture, not a green herdr.`);
+      if (!node.ok || !curl || !nvmCurl) process.exitCode = 1;
       return;
     }
     case "export": {

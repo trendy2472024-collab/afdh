@@ -14,8 +14,9 @@ In-process control plane. CI is the contract.
 - 13 portable skills + hostile fixture
 - Stub `ScannerAdapter` so the contract is testable
 - SPIFFE/WIMSE identity *context* (URI, WIT+WPT or HTTP-SIG, revocation, node isolation, fail-closed catalog). Fixture, not SPIRE.
+- nvm Node 22 pin (`.nvmrc`) + Herdr mux as `runtime.mux` (unbound; curl\|sh refused). Fixture, not a live Herdr socket.
 
-Not in 0.1: live Semgrep / gitleaks / Trivy processes, signed catalog, live SPIRE / IRSA / WIF / Entra federation, OTel export, npm publish.
+Not in 0.1: live Semgrep / gitleaks / Trivy processes, signed catalog, live SPIRE / IRSA / WIF / Entra federation, live Herdr socket / nvm use, OTel export, npm publish.
 
 ## 0.2 — real scanners
 

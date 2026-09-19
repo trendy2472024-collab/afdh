@@ -28,6 +28,7 @@ Kernel modules (`src/lib/afdh/`):
 |---|---|
 | `engine.ts` | grant, ladder, evals, `prove`, `canApplyProd` |
 | `identity.ts` | SPIFFE/WIMSE URI, WIT+WPT gate, fail-closed catalog |
+| `runtime.ts` | nvm Node 22 pin, Herdr pane map, curl\|sh refuse |
 | `policy.ts` | identities, radius, quarantine, factory, bind pin |
 | `adapters.ts` | `ScannerAdapter` contract + stubs |
 | `planner.ts` | fail-closed local plan (intent ≠ grant) |
@@ -79,6 +80,7 @@ F6: deploy-gate cannot run before evidence-gate.
 | 012 | Fail closed on identity outage | Fail-open when SPIRE/OIDC is down |
 | 013 | WIT is not a bearer; PoP is WPT or HTTP signatures | JWT-SVID / WIT as `Authorization: Bearer` |
 | 014 | Node-root is identity compromise (Spooffe) | Trust every SVID from a shared node |
+| 015 | nvm pin + Herdr mux are capabilities | curl \| sh herdr.dev/install.sh / nvm install.sh |
 
 ## Honest scope (v0.1)
 

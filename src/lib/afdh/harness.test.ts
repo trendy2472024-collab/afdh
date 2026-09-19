@@ -1,5 +1,8 @@
 import assert from "node:assert/strict";
+import { readFileSync } from "node:fs";
+import { dirname, join } from "node:path";
 import { describe, it } from "node:test";
+import { fileURLToPath } from "node:url";
 import { stubSastAdapter, stubSecretsAdapter } from "./adapters.ts";
 import {
   canApplyProd,
@@ -19,6 +22,15 @@ import {
   PRINCIPAL_URIS,
 } from "./identity.ts";
 import { gateFactoryProposal, refuseBind, scanSkillText } from "./policy.ts";
+import {
+  NVMRC,
+  PINNED_HERDR,
+  PINNED_NODE_MAJOR,
+  herdrEnvGate,
+  missionToPanes,
+  nodeGate,
+  parseNodeMajor,
+} from "./runtime.ts";
 import { BUNDLED_SKILLS, HOSTILE_PROJECT_SKILL } from "./skills.ts";
 import { STAGES, STAGE_ORDER } from "./stages.ts";
 import { toSkillMarkdown } from "./skill-md.ts";
@@ -95,6 +107,7 @@ describe("AFDH harness", () => {
     assert.equal(results.find((r) => r.id === "E1")?.passed, true);
     assert.equal(results.find((r) => r.id === "E3")?.passed, true);
     assert.equal(results.find((r) => r.id === "S7")?.passed, true);
+    assert.equal(results.find((r) => r.id === "E6")?.passed, true);
   });
 
   it("fails S2 if speed-ship is left active", () => {
@@ -208,5 +221,24 @@ describe("AFDH harness", () => {
       identity: chatUserContext(now),
     });
     assert.equal(asUser.ok, false);
+  });
+
+  it("pins Node 22 and refuses herdr/nvm curl|sh (E6)", () => {
+    const nvmrc = readFileSync(join(dirname(fileURLToPath(import.meta.url)), "../../..", ".nvmrc"), "utf8").trim();
+    assert.equal(nvmrc, "22");
+    assert.equal(NVMRC, "22");
+    assert.equal(PINNED_NODE_MAJOR, 22);
+    assert.equal(parseNodeMajor("v22.11.0"), 22);
+    assert.equal(nodeGate(22).ok, true);
+    assert.equal(nodeGate(18).ok, false);
+    assert.ok(refuseBind("https://herdr.dev/install.sh"));
+    assert.ok(refuseBind("https://raw.githubusercontent.com/nvm-sh/nvm/v0.40.3/install.sh"));
+    assert.ok(refuseBind("herdr", "latest"));
+    assert.equal(refuseBind("herdr", PINNED_HERDR), undefined);
+    assert.equal(herdrEnvGate({}).ok, false);
+    assert.equal(herdrEnvGate({ HERDR_ENV: "1" }).ok, true);
+    const panes = missionToPanes(null);
+    assert.equal(panes[0]?.name, "control-plane");
+    assert.equal(panes[0]?.state, "idle");
   });
 });
