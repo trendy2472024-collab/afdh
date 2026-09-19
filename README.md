@@ -11,6 +11,7 @@
 
 <p align="center">
   <a href="https://github.com/trendy2472024-collab/afdh/actions/workflows/ci.yml"><img src="https://github.com/trendy2472024-collab/afdh/actions/workflows/ci.yml/badge.svg" alt="CI"></a>
+  <a href="https://github.com/trendy2472024-collab/afdh/releases/tag/v0.1.0"><img src="https://img.shields.io/github/v/release/trendy2472024-collab/afdh?labelColor=0b0d10&color=a8b4c4" alt="v0.1.0"></a>
   <a href="LICENSE"><img src="https://img.shields.io/badge/license-Apache--2.0-8d939c?labelColor=0b0d10" alt="Apache-2.0"></a>
   <a href=".nvmrc"><img src="https://img.shields.io/badge/node-22-86c4a4?labelColor=0b0d10" alt="Node 22"></a>
   <a href="docs/IDENTITY.md"><img src="https://img.shields.io/badge/identity-SPIFFE%20%2F%20WIMSE-a8b4c4?labelColor=0b0d10" alt="SPIFFE / WIMSE"></a>
