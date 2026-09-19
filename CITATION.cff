@@ -1,0 +1,24 @@
+cff-version: 1.2.0
+title: "AFDH — Agentic Framework DevSecOps Harness"
+message: If you use this software, please cite it as below.
+type: software
+authors:
+  - family-names: Nwaya
+    given-names: Kingsley
+repository-code: "https://github.com/trendy2472024-collab/afdh"
+url: "https://github.com/trendy2472024-collab/afdh"
+abstract: >-
+  A fail-closed control plane for agentic SDLC. Portable skills,
+  evidence ladder, SPIFFE/WIMSE identity context. Intent is not a grant.
+keywords:
+  - agents
+  - devsecops
+  - zero-trust
+  - control-plane
+  - fail-closed
+  - spiffe
+  - wimse
+  - skills
+license: Apache-2.0
+version: 0.1.0
+date-released: "2026-09-17"

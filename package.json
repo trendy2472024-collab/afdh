@@ -2,28 +2,49 @@
   "name": "afdh",
   "version": "0.1.0",
   "private": false,
-  "description": "Zero-trust control plane for agentic SDLC. Intent is not a grant.",
+  "description": "Fail-closed control plane for agentic SDLC. Intent is not a grant.",
   "license": "Apache-2.0",
   "type": "module",
   "bin": { "afdh": "cli/afdh.mjs" },
+  "files": [
+    "cli/",
+    "src/lib/afdh/",
+    "skills/",
+    "docs/",
+    "LICENSE",
+    "NOTICE",
+    "README.md"
+  ],
   "scripts": {
     "test": "node --experimental-strip-types --test src/lib/afdh/harness.test.ts",
     "afdh": "node cli/afdh.mjs",
     "scan": "node cli/afdh.mjs scan",
     "eval": "node cli/afdh.mjs eval",
-    "prove": "node cli/afdh.mjs prove"
+    "prove": "node cli/afdh.mjs prove",
+    "identity": "node cli/afdh.mjs identity",
+    "runtime": "node cli/afdh.mjs runtime"
   },
   "engines": { "node": ">=22" },
   "repository": {
     "type": "git",
-    "url": "https://github.com/trendy2472024-collab/afdh.git"
+    "url": "git+https://github.com/trendy2472024-collab/afdh.git"
   },
+  "bugs": {
+    "url": "https://github.com/trendy2472024-collab/afdh/issues"
+  },
+  "homepage": "https://github.com/trendy2472024-collab/afdh#readme",
   "keywords": [
     "agents",
+    "agentic",
     "devsecops",
     "control-plane",
     "zero-trust",
     "fail-closed",
-    "skills"
+    "skills",
+    "spiffe",
+    "wimse",
+    "policy",
+    "sdlc",
+    "workload-identity"
   ]
 }

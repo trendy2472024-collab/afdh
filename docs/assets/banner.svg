@@ -1,0 +1,39 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1280 420" role="img" aria-label="AFDH — a control plane for agents, not a bigger prompt">
+  <title>AFDH — control plane, not a bigger prompt</title>
+  <rect width="1280" height="420" fill="#0b0d10"/>
+  <g stroke="#222830" stroke-width="1" opacity="0.9">
+    <path d="M0 70h1280M0 140h1280M0 210h1280M0 280h1280M0 350h1280"/>
+    <path d="M80 0v420M160 0v420M240 0v420M320 0v420M400 0v420M480 0v420M560 0v420M640 0v420M720 0v420M800 0v420M880 0v420M960 0v420M1040 0v420M1120 0v420M1200 0v420"/>
+  </g>
+  <rect x="24" y="24" width="1232" height="372" fill="none" stroke="#323a45" stroke-width="1.5"/>
+  <path d="M24 64V24h40" fill="none" stroke="#a8b4c4" stroke-width="3" stroke-linecap="square"/>
+  <path d="M1256 64V24h-40" fill="none" stroke="#a8b4c4" stroke-width="3" stroke-linecap="square"/>
+  <path d="M24 356v40h40" fill="none" stroke="#a8b4c4" stroke-width="3" stroke-linecap="square"/>
+  <path d="M1256 356v40h-40" fill="none" stroke="#a8b4c4" stroke-width="3" stroke-linecap="square"/>
+
+  <g transform="translate(72,146)">
+    <rect width="128" height="128" fill="#0b0d10" stroke="#222830" stroke-width="2"/>
+    <path d="M18 48V18h30" fill="none" stroke="#a8b4c4" stroke-width="5" stroke-linecap="square"/>
+    <path d="M110 48V18H80" fill="none" stroke="#a8b4c4" stroke-width="5" stroke-linecap="square"/>
+    <path d="M18 80v30h30" fill="none" stroke="#a8b4c4" stroke-width="5" stroke-linecap="square"/>
+    <path d="M110 80v30H80" fill="none" stroke="#a8b4c4" stroke-width="5" stroke-linecap="square"/>
+    <rect x="48" y="48" width="32" height="32" fill="#86c4a4"/>
+  </g>
+
+  <text x="232" y="198" fill="#e8e6de" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, Liberation Mono, monospace" font-size="64" font-weight="700" letter-spacing="6">AFDH</text>
+  <text x="232" y="242" fill="#8d939c" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, Liberation Mono, monospace" font-size="22">a control plane for agents. not a bigger prompt.</text>
+
+  <g font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, Liberation Mono, monospace" font-size="13" letter-spacing="1.6">
+    <rect x="232" y="272" width="148" height="32" fill="#12151a" stroke="#222830"/>
+    <text x="248" y="293" fill="#86c4a4">FAIL-CLOSED</text>
+    <rect x="392" y="272" width="158" height="32" fill="#12151a" stroke="#222830"/>
+    <text x="408" y="293" fill="#a8b4c4">SPIFFE / WIMSE</text>
+    <rect x="562" y="272" width="132" height="32" fill="#12151a" stroke="#222830"/>
+    <text x="578" y="293" fill="#8d939c">APACHE-2.0</text>
+    <rect x="706" y="272" width="108" height="32" fill="#12151a" stroke="#222830"/>
+    <text x="722" y="293" fill="#8d939c">NODE 22</text>
+  </g>
+
+  <text x="1188" y="56" text-anchor="end" fill="#5e6570" font-family="ui-monospace, SFMono-Regular, Menlo, Consolas, Liberation Mono, monospace" font-size="13" letter-spacing="2">v0.1.0</text>
+  <rect x="24" y="393" width="1232" height="3" fill="#86c4a4" opacity="0.55"/>
+</svg>

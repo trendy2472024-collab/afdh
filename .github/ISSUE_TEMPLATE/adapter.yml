@@ -1,5 +1,5 @@
-name: Scanner adapter
-description: Land a pinned scanner behind a capability
+name: Capability adapter
+description: Land a pinned scanner, mux, or identity adapter behind a capability
 title: "adapter: "
 labels: ["adapter", "help wanted"]
 body:
@@ -7,6 +7,7 @@ body:
     attributes:
       value: |
         Skills request capabilities. You bind a pinned adapter. Read docs/ADAPTERS.md first.
+        Identity adapters: docs/IDENTITY.md. Runtime / Herdr: docs/RUNTIME.md.
   - type: dropdown
     id: capability
     attributes:
@@ -16,19 +17,22 @@ body:
         - security.secrets
         - security.sca
         - security.iac
+        - runtime.mux
+        - runtime.node
+        - identity.spiffe
     validations:
       required: true
   - type: input
     id: tool
     attributes:
       label: Tool and pinned version
-      placeholder: "semgrep 1.80.0"
+      placeholder: "semgrep 1.80.0  /  herdr 0.9.1  /  spire-agent 1.10"
     validations:
       required: true
   - type: textarea
     id: contract
     attributes:
       label: How it fail-closes
-      description: What happens when the binary is missing, unpinned, or returns crit findings?
+      description: What happens when the binary is missing, unpinned, the mux is down, or the SVID is a bearer?
     validations:
       required: true
